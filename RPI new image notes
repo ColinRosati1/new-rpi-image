@@ -1,0 +1,56 @@
+RPI new image instructions Image 
+
+———————————————————————  LCD ————————————————
+No need to install any driver if you just want to display without the touchscreen feature, just add the following lines in the config.txt file, it works:
+
+# set current over USB to 1.2A
+max_usb_current=1
+
+# overscan to adjust image position
+overscan_left=0
+overscan_right=0
+overscan_top=0
+overscan_bottom=0
+
+# HDMI config
+hdmi_drive=1
+hdmi_ignore_edid=0xa5000080
+hdmi_group=2
+hdmi_mode=87
+
+# 1024x600 display
+hdmi_cvt=1024 600 60 3 0 0 0
+
+
+------------------------ SSH ------------------
+
+Create an empty file called "ssh" place it on the RPI root image dir
+
+
+----------------------- WPA Supplicant ---------
+
+Create a new file in the same drive with name of “wpa_supplicant.conf” without any extension in the end and paste the following contents in there (Change SSID and Password according to your own network).
+
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+network={
+ssid="WiFi_SSID"
+psk="WiFi_Password"
+}
+
+wpa_supplicant.conf file will be copied to /etc/wpa_supplicant/ directory on boot and our Pi will be connected to WiFi network automatically.
+
+--------------------- STATIC IP ----------------
+Assigning Static IP address once in the PI
+Open “dhcpcd.conf” file in Nano editor
+
+sudo nano /etc/dhcpcd.conf
+Scroll all the way to the bottom of the file and add one, or both of the following snippets. Depending on whether you want to set a static IP address for a wired connection (eth0) or a wireless connection (wlan0)
+
+interface eth0
+static ip_address=192.168.0.10/24
+static routers=192.168.0.1
+static domain_name_servers=192.168.0.1
+interface wlan0
+static ip_address=192.168.0.200/24
+static routers=192.168.0.1
+static domain_name_servers=192.168.0.1
